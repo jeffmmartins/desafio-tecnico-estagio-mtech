@@ -1,55 +1,32 @@
 
+// Array vazio para armazenar os números que vão ser gerados aleatórios
 const numerosGerados = []
 
-//Função que gera um número aleatório de 1 a 100
-function gerarNumeroAleatorio() {
-    const input = document.getElementById('numeroAleatorio');
-    const quantidade = parseInt(input.value);
+// Função para fazer a exibição do numero aleatório
+function exibirNumeroAleatorio(){
+    // Captura o valor que foi digitado no no input
+    const inputQuantidade = document.getElementById('numeroAleatorio');
+    const quantidade = parseInt(inputQuantidade.value);
 
-    if (isNaN(quantidade) || quantidade <= 0) {
-        alert("Por favor, digite uma quantidade válida.");
-        return;
-    }
-
-    // 1. Limpa o array para garantir que começamos do zero
-    numerosGerados.length = 0;
-
-    // 2. Gera EXATAMENTE a quantidade de números solicitada
+    // Limpa o array 
+    numerosGerados.length = 0; 
+    
+    // Gera os números aleatórios e armazena no array
     for (let i = 0; i < quantidade; i++) {
-        const numero = Math.floor(Math.random() * 100) + 1;
-        numerosGerados.push(numero);
+        const numeroAleatorioGerado = Math.floor(Math.random() * 100) + 1;
+        numerosGerados.push(numeroAleatorioGerado);
     }
 
-    // 3. Exibe os números gerados na tela
-    const listaDiv = document.getElementById('listaNumerosGerados');
-    listaDiv.textContent = 'Números gerados: ' + numerosGerados.join(', ');
+    // Exibe a nova lista de números gerados na tela
+    const listaNumeros = document.getElementById('listaNumerosGerados');
+    listaNumeros.textContent = 'Números gerados: ' + numerosGerados.join(', ');
 
-    // Limpa a análise anterior
+    // Limpa análise anterior
     const resultadoDiv = document.getElementById('resultadoAnalise');
     resultadoDiv.innerHTML = '<p>Clique em "Analisar" para ver os resultados.</p>';
 }
 
-//Função para fazer a exibição do numero aleatório
-function exibirNumeroAleatorio(){
-     
-    const inputQuantidade = document.getElementById('numeroAleatorio');
-    const quantidade = parseInt(inputQuantidade.value);
-
-    //Limpa o array 
-    numerosGerados.length = 0; 
-    
-    //Gera os numeros e adiciona ao array
-    for (let i = 0; i < quantidade; i++) {
-        const numeroAleatorioGerado = gerarNumeroAleatorio();
-        numerosGerados.push(numeroAleatorioGerado);
-    }
-
-    //Exibe a nova lista de números gerados na tela
-    const listaNumeros = document.getElementById('listaNumerosGerados');
-    listaNumeros.textContent = 'Números gerados: ' + numerosGerados.join(', ');
-}
-
-// Função utilizada para realizar a media de todos os numeros
+// Função utilizada para realizar a media de todos os números que foram gerados aleatórios
 function mediaTodosNumeros(){
     let soma = 0
     for(const numero of numerosGerados){
@@ -62,24 +39,17 @@ function mediaTodosNumeros(){
 
 // Função utilizada para encontrar o maior numero no array
 function maiorNumeroArray() {
-    //Utilizando o reduce para fazer a comparação de números na lista de array
-    const maiorNumero = numerosGerados.reduce((maiorNumeroEncontrado, numeroAtual) => {
-            return(numeroAtual > maiorNumeroEncontrado) ? numeroAtual : maiorNumeroEncontrado
-    })
-
-    return maiorNumero
+  const maiorNumero = Math.max(...numerosGerados)
+  return maiorNumero
 }
 
 //Função para encontrar o menor numero no array
-function menoNumeroArray() {
-    //Utilizando o reduce para fazer a comparação de números na lista de array
-    const menorNumero = numerosGerados.reduce((menoNumeroEncontrado, numeroAtual) => {
-            return(numeroAtual < menorNumeroEncontrado) ? numeroAtual : menorNumeroEncontrado
-    })
-
+function menorNumeroArray() {
+    const menorNumero = Math.min(...numerosGerados)
     return menorNumero
 }
 
+// Função feita para realizar a contagem de números pares e impares
 function numerosParesImpares(){
     let contagemNumerosPares = 0
     let contageNumerosImpares = 0 
@@ -91,10 +61,11 @@ function numerosParesImpares(){
             contageNumerosImpares++
         }
     }
-    return [contageNumerosImpares, contagemNumerosPares]
+    return ["Números impares: " + contageNumerosImpares, " Números pares: " + contagemNumerosPares]
 }
 
 
+// Captura o botão analisar pelo id
 const btnAnalisar = document.getElementById('analisar');
 
         btnAnalisar.addEventListener('click', () => {
@@ -103,21 +74,19 @@ const btnAnalisar = document.getElementById('analisar');
                 return;
             }
             
+            // Seleciona o elemento DIV onde os resultados da análise serão exibidos
             const resultadoDiv = document.getElementById('resultadoAnalise');
 
-            const soma = numerosGerados.reduce((total, atual) => total + atual, 0);
-            const media = soma / numerosGerados.length;
-            const maior = Math.max(...numerosGerados);
-            const menor = Math.min(...numerosGerados);
-            const pares = numerosGerados.filter(n => n % 2 === 0).length;
-            const impares = numerosGerados.length - pares;
+            const media = mediaTodosNumeros() // Calcula a média dos números que estão no array
+            const maior = maiorNumeroArray() // Encontra o maior número que está no array 
+            const menor = menorNumeroArray() // Encontra o menor número que está no array
+            const contagemNumerosParesImpares = numerosParesImpares() // Retorna a contagem de numeros pares e impares
             
             resultadoDiv.innerHTML = `
-                <b>Total de números:</b> ${numerosGerados.length -1}<br>
+                <b>Total de números:</b> ${numerosGerados.length}<br>
                 <b>Média:</b> ${media.toFixed(2)}<br>
                 <b>Maior número:</b> ${maior}<br>
                 <b>Menor número:</b> ${menor}<br>
-                <b>Pares:</b> ${pares}<br>
-                <b>Ímpares:</b> ${impares}
+                <b>Contagem de números pares e impares :</b> ${contagemNumerosParesImpares}<br>
             `;
         });
